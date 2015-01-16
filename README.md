@@ -1,4 +1,4 @@
-Yii2-fixture-generator
+Yii2-fixture-template-generator
 ======================
 developing
 
