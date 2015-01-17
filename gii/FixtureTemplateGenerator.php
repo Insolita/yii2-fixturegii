@@ -11,7 +11,6 @@ use Yii;
 use yii\db\Connection;
 use yii\db\TableSchema;
 use yii\gii\CodeFile;
-use yii\helpers\VarDumper;
 
 class FixtureTemplateGenerator extends \yii\gii\Generator
 {
@@ -175,7 +174,7 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
         foreach ($this->getTables() as $tableName) {
             $tableSchema = $db->getTableSchema($tableName);
             $tableCaption = $this->getTableCaption($tableName);
-            $tableColumns = $this->columnsBySchema($tableSchema);
+            $tableColumns = $this->columnsBySchema($tableSchema, $tableCaption);
             $params = compact(
                 'tableColumns'
             );
@@ -190,19 +189,19 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
     }
 
 
-    public function columnsBySchema($schema)
+    public function columnsBySchema($schema, $tableCaption)
     {
         $cols = [];
         /**@var TableSchema $schema * */
         foreach ($schema->columns as $column) {
-            $type = $this->getColumnType($column, $schema);
+            $type = $this->getColumnType($column, $schema, $tableCaption);
             $cols[$column->name] = $type;
         }
         return $cols;
     }
 
 
-    public function getColumnType($col, &$schema)
+    public function getColumnType($col, &$schema, $tableCaption)
     {
         $coldata = '';
         $related=$this->findRelatedAttrs($schema);
@@ -227,7 +226,7 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
         } elseif ($col->dbType === 'tinyint(1)') {
             $coldata = '$faker->randomElement($array = array (0,1))';
         }elseif ($col->type === 'string') {
-            $coldata = $this->getFakerString($col->size, $col->name);
+            $coldata = $this->getFakerString($col->size, $col->name, $tableCaption);
         }elseif ($col->type === 'text') {
             $coldata = $col->size?'$faker->text($maxNbChars = '.($col->size-15).')':'$faker->text(300)';
         }elseif ($col->type === 'integer' || $col->type === 'smallint' || $col->type === 'mediumint' || $col->type === 'bigint') {
@@ -288,7 +287,7 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
         return $rels;
     }
 
-    public function getFakerString($size, $colname)
+    public function getFakerString($size, $colname, $tableCaption)
     {
         $colname=strtolower($colname);
         $colname=str_replace('_','',$colname);
@@ -300,9 +299,9 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
         }elseif(strpos($colname,'lastname')!==false){
             return '$faker->lastName()';
         }elseif(strpos($colname,'name')!==false){
-            return '$faker->name';
+            return '"'.ucfirst($tableCaption).'_".$index';
         }elseif(strpos($colname,'title')!==false){
-            return '$faker->sentence($nbWords = 3)';
+            return '$faker->sentence($nbWords = 2)';
         }elseif(strpos($colname,'mail')!==false){
             return '$faker->email';
         }elseif(strpos($colname,'slug')!==false || strpos($colname,'alias')!==false){
