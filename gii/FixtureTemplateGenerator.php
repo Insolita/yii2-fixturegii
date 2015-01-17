@@ -18,7 +18,7 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
 
 
     public $db = 'db';
-    public $templatePath = '@tests/codeception/commmon/fixtures/templates';
+    public $templatePath = '@tests/codeception/common/fixtures/templates';
     public $tableName;
     public $tableIgnore = '';
 
@@ -206,15 +206,13 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
     {
         $coldata = '';
         $related=$this->findRelatedAttrs($schema);
-        VarDumper::dump($col);
         /**@var \yii\db\ColumnSchema $col * */
         if ($col->autoIncrement || in_array($col->name, $related)) {
             $coldata = '$index';
         } elseif (strpos($col->dbType, 'set(') !== false) {
             preg_match_all('#set\((.+)\)#', $col->dbType, $matches);
             if (!empty($matches) && isset($matches[1][0])) {
-                $val = $matches[1][0];
-                $coldata = '$faker->randomElement($array = array (' . implode(',',$matches[1][0]) . '))';
+                $coldata = '$faker->randomElement($array = array (' . $matches[1][0]. '))';
             } else {
                 $coldata = null;
             }
@@ -231,8 +229,10 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
         }elseif ($col->type === 'string') {
             $coldata = $this->getFakerString($col->size, $col->name);
         }elseif ($col->type === 'text') {
-            $coldata = '$faker->text($maxNbChars = '.($col->size-15).')';
-        }elseif ($col->type === 'integer') {
+            $coldata = $col->size?'$faker->text($maxNbChars = '.($col->size-15).')':'$faker->text(300)';
+        }elseif ($col->type === 'integer' || $col->type === 'smallint' || $col->type === 'mediumint' || $col->type === 'bigint') {
+            $coldata = $this->getFakerInt($col->size, $col->name);
+        }elseif ($col->type === 'smallint') {
             $coldata = $this->getFakerInt($col->size, $col->name);
         } elseif ($col->type === 'timestamp') {
             $coldata = '$faker->unixTime()';
@@ -320,7 +320,6 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
         }else{
             return ($size)?'$faker->text('.($size-1).')':'$faker->paragraph()';
         }
-
     }
     public function getFakerInt($size, $colname)
     {
@@ -336,7 +335,7 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
             )){
             return '$faker->unixTime()';
         }else{
-            return 'randomNumber($nbDigits = '.$size.')';
+            return '$faker->randomNumber($nbDigits = '.$size.')';
         }
     }
 
