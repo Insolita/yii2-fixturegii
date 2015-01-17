@@ -1,6 +1,7 @@
 Yii2-fixture-template-generator
 ======================
-developing
+quick way generate fixture templates for all tables.
+
 
 Installation
 ------------
@@ -25,7 +26,5 @@ to the require section of your `composer.json` file.
 Usage
 -----
 
-Once the extension is installed, simply use it in your code by  :
-
-```php
-<?= \insolita\fixturegii\AutoloadExample::widget(); ?>```
+Go to gii, choose FixtureTemplateGenerator, set needed tables or "*" for all, go to setted templatePath,
+correct as you want and run php console/yii fixture/generate-all
