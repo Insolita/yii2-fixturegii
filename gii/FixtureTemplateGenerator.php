@@ -237,13 +237,13 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
         } elseif ($col->type === 'timestamp') {
             $coldata = '$faker->unixTime()';
         } elseif ($col->type === 'datetime') {
-            $coldata = '$faker->dateTime()';
+            $coldata = 'date("Y-m-d H:i:s",$faker->unixTime())';
         } elseif ($col->type === 'date') {
             $coldata = '$faker->date()';
         }  elseif ($col->type === 'time') {
             $coldata = '$faker->time()';
         }elseif ($col->type === 'decimal' || $col->type==='float') {
-            $coldata = '$faker->randomFloat($nbMaxDecimals='.$col->scale.', $max='.$col->size.')';
+            $coldata = '$faker->randomNumber('.($col->size>3?3:$col->size).').".".$faker->randomNumber('.($col->scale>2?2:$col->scale).')';
         }else {
             $coldata = 'TYPE_' . strtoupper($col->type);
         }
@@ -311,10 +311,10 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
             return '$faker->url';
         }elseif(strpos($colname,'ip')!==false ){
             return '$faker->ipv4';
-        }elseif(strpos($colname,'avatar')!==false || strpos($colname,'image')!==false || strpos($colname,'img')!==false){
+        }elseif(strpos($colname,'avatar')!==false || strpos($colname,'picture')!==false ||strpos($colname,'image')!==false || strpos($colname,'img')!==false){
             return '$faker->image()';
         }elseif(strpos($colname,'file')!==false || strpos($colname,'path')!==false){
-            return '$faker->file()';
+            return '"/some/path/".$faker->numerify("#####")';
         }elseif($size<15){
             return '$faker->word';
         }else{
@@ -335,7 +335,7 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
             )){
             return '$faker->unixTime()';
         }else{
-            return '$faker->randomNumber($nbDigits = '.$size.')';
+            return '$faker->randomNumber($nbDigits = '.(($size>=5)?5:$size).')';
         }
     }
 
