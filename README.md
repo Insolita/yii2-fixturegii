@@ -1,4 +1,4 @@
-Yii2-fixture-template-generator
+Yii2-fixture-template-generator(beta)
 ======================
 quick way generate fixture templates for all tables.
 
