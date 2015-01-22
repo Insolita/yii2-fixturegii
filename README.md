@@ -11,7 +11,7 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist insolita/yii2-fixturegii "*"
+php composer.phar require-dev --prefer-dist insolita/yii2-fixturegii "*"
 ```
 
 or add
@@ -20,7 +20,7 @@ or add
 "insolita/yii2-fixturegii": "*"
 ```
 
-to the require section of your `composer.json` file.
+to the require-dev section of your `composer.json` file.
 
 
 Usage
