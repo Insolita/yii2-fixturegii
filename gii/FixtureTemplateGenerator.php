@@ -202,7 +202,7 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
             foreach ($this->getTables() as $tableName) {
                 $tableCaption = $this->getTableCaption($tableName);
                 $tableData = $this->getTableData($tableName);
-                $params = ['data' => $tableData];
+                $params = ['data' => $tableData,'tableCaption'=>$tableCaption];
                 $files[] = new CodeFile(
                     Yii::getAlias($this->templatePath) . '/' . $tableCaption . '.php',
                     $this->render('fixturedata.php', $params)
