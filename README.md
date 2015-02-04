@@ -1,4 +1,4 @@
-Yii2-fixture-template-generator(beta)
+Yii2-fixture/template-generator
 ======================
 quick way generate fixture templates for all tables based on table schema, or fixtures data based on tables data
 Ability to set multiple tables with mask
