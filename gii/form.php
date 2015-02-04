@@ -9,3 +9,5 @@ echo $form->field($generator, 'tableName');
 echo $form->field($generator, 'tableIgnore');
 echo $form->field($generator, 'db');
 echo $form->field($generator, 'templatePath');
+echo $form->field($generator, 'genmode')->dropDownList([0=>'templates by table schema',1=>'fixtures by table data']);
+echo $form->field($generator, 'datalimit');

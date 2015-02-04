@@ -9,20 +9,26 @@ namespace insolita\fixturegii\gii;
 
 use Yii;
 use yii\db\Connection;
+use yii\db\Query;
 use yii\db\TableSchema;
 use yii\gii\CodeFile;
 
 class FixtureTemplateGenerator extends \yii\gii\Generator
 {
-
+    const MODE_TPL = 0;
+    const MODE_FIXT = 1;
 
     public $db = 'db';
     public $templatePath = '@tests/codeception/common/fixtures/templates';
     public $tableName;
     public $tableIgnore = '';
+    public $genmode = self::MODE_TPL;
+    public $datalimit=20;
 
     private $_ignoredTables = [];
     private $_tables = [];
+
+
 
     /**
      * @inheritdoc
@@ -49,10 +55,14 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
         return array_merge(
             parent::rules(), [
                 [['db', 'tableName', 'tableIgnore'], 'filter', 'filter' => 'trim'],
-                [['db', 'tableName'], 'required'],
+                [['db', 'tableName', 'genmode'], 'required'],
+                ['datalimit','default','value'=>10],
+                ['genmode','default','value'=>self::MODE_TPL],
+                ['genmode', 'in', 'range' => [self::MODE_TPL, self::MODE_FIXT]],
+                ['datalimit','integer','min'=>1],
                 [['db'], 'match', 'pattern' => '/^\w+$/', 'message' => 'Only word characters are allowed.'],
                 [
-                    ['tableName','tableIgnore'], 'match', 'pattern' =>'/[^\w\*_\,\-\s]/','not'=>true,
+                    ['tableName', 'tableIgnore'], 'match', 'pattern' => '/[^\w\*_\,\-\s]/', 'not' => true,
                     'message' => 'Only word characters, underscore, comma,and optionally an asterisk are allowed.'
                 ],
                 [['db'], 'validateDb'],
@@ -73,6 +83,8 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
                 'tableName' => 'Table Name',
                 'tableIgnore' => 'Ignored tables',
                 'templatePath' => 'Template Path',
+                'datalimit'=>'Limit rows for fixtures',
+                'genmode'=>'Generation Mode'
             ]
         );
     }
@@ -87,7 +99,9 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
                 'db' => 'This is the ID of the DB application component.',
                 'tableName' => 'Use "*" for all table, mask support - as "tablepart*", or you can separate table names by comma ',
                 'tableIgnore' => 'You can separate some table names by comma, for ignor ',
-                'templatePath' => 'Path for you Fixture templates'
+                'templatePath' => 'Path for you templates/fixtures',
+                'datalimit'=>'',
+                'genmode'=>'You can generate fixture templates or fixtures based on table data '
             ]
         );
     }
@@ -112,7 +126,7 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
      */
     public function validateTableName()
     {
-        $tables=$this->prepareTables();
+        $tables = $this->prepareTables();
 
         if (empty($tables)) {
             $this->addError('tableName', "Table '{$this->tableName}' does not exist, or all tables was ignored");
@@ -143,7 +157,7 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
      */
     public function requiredTemplates()
     {
-        return ['fixturetpl.php'];
+        return ['fixturetpl.php', 'fixturedata.php'];
     }
 
     /**
@@ -171,17 +185,29 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
     {
         $files = $tableRelations = $tableList = [];
         $db = $this->getDbConnection();
-        foreach ($this->getTables() as $tableName) {
-            $tableSchema = $db->getTableSchema($tableName);
-            $tableCaption = $this->getTableCaption($tableName);
-            $tableColumns = $this->columnsBySchema($tableSchema, $tableCaption);
-            $params = compact(
-                'tableColumns'
-            );
-            $files[] = new CodeFile(
-                Yii::getAlias($this->templatePath) . '/' . $tableCaption . '.php',
-                $this->render('fixturetpl.php', $params)
-            );
+        if ($this->genmode == self::MODE_TPL) {
+            foreach ($this->getTables() as $tableName) {
+                $tableSchema = $db->getTableSchema($tableName);
+                $tableCaption = $this->getTableCaption($tableName);
+                $tableColumns = $this->columnsBySchema($tableSchema, $tableCaption);
+                $params = compact(
+                    'tableColumns'
+                );
+                $files[] = new CodeFile(
+                    Yii::getAlias($this->templatePath) . '/' . $tableCaption . '.php',
+                    $this->render('fixturetpl.php', $params)
+                );
+            }
+        } else {
+            foreach ($this->getTables() as $tableName) {
+                $tableCaption = $this->getTableCaption($tableName);
+                $tableData = $this->getTableData($tableName);
+                $params = ['data' => $tableData];
+                $files[] = new CodeFile(
+                    Yii::getAlias($this->templatePath) . '/' . $tableCaption . '.php',
+                    $this->render('fixturedata.php', $params)
+                );
+            }
         }
 
 
@@ -204,14 +230,14 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
     public function getColumnType($col, &$schema, $tableCaption)
     {
         $coldata = '';
-        $related=$this->findRelatedAttrs($schema);
+        $related = $this->findRelatedAttrs($schema);
         /**@var \yii\db\ColumnSchema $col * */
         if ($col->autoIncrement || in_array($col->name, $related)) {
-            $coldata = '$index';
+            $coldata = '($index+1)';
         } elseif (strpos($col->dbType, 'set(') !== false) {
             preg_match_all('#set\((.+)\)#', $col->dbType, $matches);
             if (!empty($matches) && isset($matches[1][0])) {
-                $coldata = '$faker->randomElement($array = array (' . $matches[1][0]. '))';
+                $coldata = '$faker->randomElement($array = array (' . $matches[1][0] . '))';
             } else {
                 $coldata = null;
             }
@@ -219,19 +245,21 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
         } elseif (strpos($col->dbType, 'enum(') !== false) {
             preg_match_all('#enum\((.+)\)#', $col->dbType, $matches);
             if (!empty($matches) && isset($matches[1][0])) {
-                $coldata = '$faker->randomElement($array = array (' . $matches[1][0]. '))';
+                $coldata = '$faker->randomElement($array = array (' . $matches[1][0] . '))';
             } else {
                 $coldata = null;
             }
         } elseif ($col->dbType === 'tinyint(1)') {
             $coldata = '$faker->randomElement($array = array (0,1))';
-        }elseif ($col->type === 'string') {
+        } elseif ($col->type === 'string') {
             $coldata = $this->getFakerString($col->size, $col->name, $tableCaption);
-        }elseif ($col->type === 'text') {
-            $coldata = $col->size?'$faker->text($maxNbChars = '.($col->size-15).')':'$faker->text(300)';
-        }elseif ($col->type === 'integer' || $col->type === 'smallint' || $col->type === 'mediumint' || $col->type === 'bigint') {
+        } elseif ($col->type === 'text') {
+            $coldata = $col->size ? '$faker->text($maxNbChars = ' . ($col->size - 15) . ')' : '$faker->text(300)';
+        } elseif ($col->type === 'integer' || $col->type === 'smallint' || $col->type === 'mediumint'
+            || $col->type === 'bigint'
+        ) {
             $coldata = $this->getFakerInt($col->size, $col->name);
-        }elseif ($col->type === 'smallint') {
+        } elseif ($col->type === 'smallint') {
             $coldata = $this->getFakerInt($col->size, $col->name);
         } elseif ($col->type === 'timestamp') {
             $coldata = '$faker->unixTime()';
@@ -239,11 +267,12 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
             $coldata = 'date("Y-m-d H:i:s",$faker->unixTime())';
         } elseif ($col->type === 'date') {
             $coldata = '$faker->date()';
-        }  elseif ($col->type === 'time') {
+        } elseif ($col->type === 'time') {
             $coldata = '$faker->time()';
-        }elseif ($col->type === 'decimal' || $col->type==='float') {
-            $coldata = '$faker->randomNumber('.($col->size>3?3:$col->size).').".".$faker->randomNumber('.($col->scale>2?2:$col->scale).')';
-        }else {
+        } elseif ($col->type === 'decimal' || $col->type === 'float') {
+            $coldata = '$faker->randomNumber(' . ($col->size > 3 ? 3 : $col->size) . ').".".$faker->randomNumber('
+                . ($col->scale > 2 ? 2 : $col->scale) . ')';
+        } else {
             $coldata = 'TYPE_' . strtoupper($col->type);
         }
 
@@ -277,8 +306,8 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
         if (!empty($schema->foreignKeys)) {
             foreach ($schema->foreignKeys as $i => $constraint) {
                 foreach ($constraint as $pk => $fk) {
-                    if($pk){
-                        $rels[]=$pk;
+                    if ($pk) {
+                        $rels[] = $pk;
                     }
                 }
             }
@@ -289,52 +318,60 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
 
     public function getFakerString($size, $colname, $tableCaption)
     {
-        $colname=strtolower($colname);
-        $colname=str_replace('_','',$colname);
+        $colname = strtolower($colname);
+        $colname = str_replace('_', '', $colname);
 
-        if(strpos($colname,'username')!==false || strpos($colname,'nick')!==false || strpos($colname,'user')!==false){
+        if (strpos($colname, 'username') !== false || strpos($colname, 'nick') !== false
+            || strpos($colname, 'user') !== false
+        ) {
             return '$faker->userName';
-        }elseif(strpos($colname,'firstname')!==false){
+        } elseif (strpos($colname, 'firstname') !== false) {
             return '$faker->firstName()';
-        }elseif(strpos($colname,'lastname')!==false){
+        } elseif (strpos($colname, 'lastname') !== false) {
             return '$faker->lastName()';
-        }elseif(strpos($colname,'name')!==false){
-            return '"'.ucfirst($tableCaption).'_".$index';
-        }elseif(strpos($colname,'title')!==false){
+        } elseif (strpos($colname, 'name') !== false) {
+            return '"' . ucfirst($tableCaption) . '_".($index+1)';
+        } elseif (strpos($colname, 'title') !== false) {
             return '$faker->sentence($nbWords = 2)';
-        }elseif(strpos($colname,'mail')!==false){
+        } elseif (strpos($colname, 'mail') !== false) {
             return '$faker->email';
-        }elseif(strpos($colname,'slug')!==false || strpos($colname,'alias')!==false){
+        } elseif (strpos($colname, 'slug') !== false || strpos($colname, 'alias') !== false) {
             return '$faker->slug';
-        }elseif(strpos($colname,'url')!==false || strpos($colname,'link')!==false ){
+        } elseif (strpos($colname, 'url') !== false || strpos($colname, 'link') !== false) {
             return '$faker->url';
-        }elseif(strpos($colname,'ip')!==false ){
+        } elseif (strpos($colname, 'ip') !== false) {
             return '$faker->ipv4';
-        }elseif(strpos($colname,'avatar')!==false || strpos($colname,'picture')!==false ||strpos($colname,'image')!==false || strpos($colname,'img')!==false){
+        } elseif (strpos($colname, 'avatar') !== false || strpos($colname, 'picture') !== false
+            || strpos($colname, 'image') !== false
+            || strpos($colname, 'img') !== false
+        ) {
             return '$faker->image()';
-        }elseif(strpos($colname,'file')!==false || strpos($colname,'path')!==false){
+        } elseif (strpos($colname, 'file') !== false || strpos($colname, 'path') !== false) {
             return '"/some/path/".$faker->numerify("#####")';
-        }elseif($size<15){
+        } elseif ($size < 15) {
             return '$faker->word';
-        }else{
-            return ($size)?'$faker->text('.($size-1).')':'$faker->paragraph()';
+        } else {
+            return ($size) ? '$faker->text(' . ($size - 1) . ')' : '$faker->paragraph()';
         }
     }
+
     public function getFakerInt($size, $colname)
     {
-        $colname=strtolower($colname);
-        $colname=str_replace('_','',$colname);
-        if($size==11 && (
-                strpos($colname,'create')!==false
-                || strpos($colname,'update')!==false
-                || strpos($colname,'last')!==false
-                || strpos($colname,'modif')!==false
-                || strpos($colname,'time')!==false
-                || strpos($colname,'date')!==false
-            )){
+        $colname = strtolower($colname);
+        $colname = str_replace('_', '', $colname);
+        if ($size == 11
+            && (
+                strpos($colname, 'create') !== false
+                || strpos($colname, 'update') !== false
+                || strpos($colname, 'last') !== false
+                || strpos($colname, 'modif') !== false
+                || strpos($colname, 'time') !== false
+                || strpos($colname, 'date') !== false
+            )
+        ) {
             return '$faker->unixTime()';
-        }else{
-            return '$faker->randomNumber($nbDigits = '.(($size>=5)?5:$size).')';
+        } else {
+            return '$faker->randomNumber($nbDigits = ' . (($size >= 5) ? 5 : $size) . ')';
         }
     }
 
@@ -343,6 +380,22 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
     {
         $db = $this->getDbConnection();
         return str_replace($db->tablePrefix, '', strtolower($tableName));
+    }
+
+    public function getTableData($tableName)
+    {
+        $db = $this->getDbConnection();
+        $query=(new Query())->select('*')->from($tableName)->limit($this->datalimit);
+        $data=$query->all($db);
+        if(!empty($data)){
+            return $data;
+        }else{
+            $tableSchema = $db->getTableSchema($tableName);
+            foreach ($tableSchema->columns as $column) {
+                $data[$column->name]="";
+            }
+            return [$data];
+        }
     }
 
     public function getTableAlias($tableCaption)
@@ -364,7 +417,7 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
             foreach ($ignors as $ignoredTable) {
                 $prepared = $this->prepareTableName($ignoredTable);
                 if (!empty($prepared)) {
-                    $this->_ignoredTables=array_merge($this->_ignoredTables, $prepared);
+                    $this->_ignoredTables = array_merge($this->_ignoredTables, $prepared);
                 }
             }
         }
@@ -374,7 +427,7 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
     public function prepareTableName($tableName)
     {
         $prepared = [];
-        $tableName=trim($tableName);
+        $tableName = trim($tableName);
         $db = $this->getDbConnection();
         if ($db === null) {
             return $prepared;
@@ -417,11 +470,11 @@ class FixtureTemplateGenerator extends \yii\gii\Generator
             foreach ($tables as $goodTable) {
                 $prepared = $this->prepareTableName($goodTable);
                 if (!empty($prepared)) {
-                    $this->_tables=array_merge($this->_tables, $prepared);
+                    $this->_tables = array_merge($this->_tables, $prepared);
                 }
-           }
-            foreach($this->_tables as $i=>$t){
-                if(in_array($t, $this->_ignoredTables)){
+            }
+            foreach ($this->_tables as $i => $t) {
+                if (in_array($t, $this->_ignoredTables)) {
                     unset($this->_tables[$i]);
                 }
             }
