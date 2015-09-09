@@ -13,7 +13,7 @@ return [
 <?php foreach($data as $i=>$row):?>
     '<?=$tableCaption.($i+1)?>'=>[
     <?php foreach($row as $name=>$val):?>
-    '<?=$name?>'=> '<?=$val;?>',
+    '<?=$name?>'=> "<?= addslashes($val);?>",
     <?php endforeach;?>
     ],
 <?php endforeach;?>
