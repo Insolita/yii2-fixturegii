@@ -36,5 +36,11 @@ to the require-dev section of your `composer.json` file.
 Usage
 -----
 
+Add 
+```
+Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
+```
+to your config/web.php
+
 Go to gii, choose FixtureTemplateGenerator, set needed tables or "*" for all, go to setted templatePath,
 correct as you want and run php console/yii fixture/generate-all
