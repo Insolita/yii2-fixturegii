@@ -8,6 +8,16 @@ Installation
 
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
+First, you must specify composer  'minimum-stability' to 'dev' in root section. Like that:
+```
+...
+"minimum-stability": "dev",
+"prefer-stable": true,
+...
+```
+
+See more about 'minimum-stability': https://getcomposer.org/doc/04-schema.md#minimum-stability
+
 Either run
 
 ```
