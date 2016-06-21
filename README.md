@@ -21,13 +21,13 @@ See more about 'minimum-stability': https://getcomposer.org/doc/04-schema.md#min
 Either run
 
 ```
-php composer.phar require-dev --prefer-dist insolita/yii2-fixturegii "*"
+php composer.phar require-dev --prefer-dist insolita/yii2-fixturegii "~0.1"
 ```
 
 or add
 
 ```
-"insolita/yii2-fixturegii": "*"
+"insolita/yii2-fixturegii": "~0.1"
 ```
 
 to the require-dev section of your `composer.json` file.
@@ -44,3 +44,4 @@ to your config/web.php
 
 Go to gii, choose FixtureTemplateGenerator, set needed tables or "*" for all, go to setted templatePath,
 correct as you want and run php console/yii fixture/generate-all
+
