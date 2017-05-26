@@ -1,0 +1,18 @@
+namespace: tests
+actor: Tester
+paths:
+    tests: tests
+    log: tests/output
+    data: tests/data
+    helpers: tests/helpers
+settings:
+    bootstrap: bootstrap.php
+    suite_class: \PHPUnit_Framework_TestSuite
+    memory_limit: 1024M
+    log: false
+    colors: true
+coverage:
+    enabled: true
+    whitelist:
+        include: src/
+        exclude:
