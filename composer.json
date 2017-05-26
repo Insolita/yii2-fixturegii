@@ -21,6 +21,9 @@
 		"codeception/verify": "~0.3.1",
 		"codeception/specify": "~0.4.3"
 	},
+	"suggest": {
+		"insolita/yii2-skeletest": "1.*"
+	},
     "autoload": {
         "psr-4": {
             "insolita\\fixturegii\\": "src/"
