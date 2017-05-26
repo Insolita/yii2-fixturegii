@@ -7,7 +7,7 @@ namespace tests\unit;
 
 use Codeception\Test\Unit;
 
-class AwesomeTest extends Unit
+class FakerColumnResolverTest extends Unit
 {
     public function testDummy()
     {

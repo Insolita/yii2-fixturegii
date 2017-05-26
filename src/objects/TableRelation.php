@@ -17,6 +17,10 @@ class TableRelation
     /**
      * @var string
      */
+    private $name;
+    /**
+     * @var string
+     */
     private $tableName;
     
     /**
@@ -27,11 +31,13 @@ class TableRelation
     /**
      * TableRelation constructor.
      *
+     * @param string $name
      * @param string $tableName
      * @param array $constraints
      */
-    public function __construct($tableName, $constraints)
+    public function __construct($name, $tableName, $constraints)
     {
+        $this->name = $name;
         $this->tableName = $tableName;
         foreach ($constraints as $fk => $related) {
             $this->constraints[] = ['fk' => $fk, 'related' => $related];
@@ -45,7 +51,13 @@ class TableRelation
     {
         return $this->tableName;
     }
-    
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->tableName;
+    }
     /**
      * @return array
      */

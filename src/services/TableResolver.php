@@ -166,10 +166,10 @@ class TableResolver
         $tableSchema = $this->getTableSchema($tableName);
         $relations = [];
         if (!empty($tableSchema->foreignKeys)) {
-            foreach ($tableSchema->foreignKeys as $i => $constraints) {
+            foreach ($tableSchema->foreignKeys as $name => $constraints) {
                 if(!empty($constraints)){
                     $tableName = array_shift($constraints);
-                    $relations[] = new TableRelation($tableName, $constraints);
+                    $relations[] = new TableRelation($name, $tableName, $constraints);
                 }
             }
         }
@@ -179,7 +179,7 @@ class TableResolver
     /**
      * @param string $tableName
      *
-     * @return array
+     * @return array|TableIndex[]
      **/
     public function getIndexes($tableName)
     {
@@ -240,17 +240,15 @@ SQL;
         if (!empty($schemaIndexes)) {
             $schemaIndexes = ArrayHelper::index($schemaIndexes, null, 'Key_name');
             foreach ($schemaIndexes as $indexName => $data) {
-                if ($indexName !== 'PRIMARY') {
-                    $cols = ArrayHelper::getColumn(
-                        $data,
-                        function ($element) {
-                            return trim($element['Column_name'], '\'"');
-                        },
-                        true
-                    );
-                    $isUnique = reset($data)['Non_unique'] == 1 ? false : true;
-                    $indexes[] = new TableIndex($indexName, $cols, $isUnique);
-                }
+                $cols = ArrayHelper::getColumn(
+                    $data,
+                    function ($element) {
+                        return trim($element['Column_name'], '\'"');
+                    },
+                    true
+                );
+                $isUnique = reset($data)['Non_unique'] == 1 ? false : true;
+                $indexes[] = new TableIndex($indexName, $cols, $isUnique);
             }
         }
         return $indexes;
