@@ -1,33 +1,24 @@
 Yii2-fixture/template-generator
-======================
-quick way generate fixture templates for all tables based on table schema, or fixtures data based on tables data
-Ability to set multiple tables with mask
+===============================
+![Status](https://travis-ci.org/Insolita/yii2-fixturegii.svg?branch=master)
+![Latest Stable Version](https://img.shields.io/packagist/v/insolita/yii2-fixturegii.svg)
+[![Total Downloads](https://img.shields.io/packagist/dt/insolita/yii2-fixturegii.svg)](https://packagist.org/packages/insolita/yii2-fixturegii.svg)
+![License](https://img.shields.io/packagist/l/insolita/yii2-fixturegii.svg)
+gii fixture helper - generate fixture classes; faker templates; fixture data files from table
+support bulk template and data-file generations
 
 Installation
 ------------
 
-The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
-
-First, you must specify composer  'minimum-stability' to 'dev' in root section. Like that:
-```
-...
-"minimum-stability": "dev",
-"prefer-stable": true,
-...
-```
-
-See more about 'minimum-stability': https://getcomposer.org/doc/04-schema.md#minimum-stability
-
-Either run
 
 ```
-php composer.phar require-dev --prefer-dist insolita/yii2-fixturegii "~0.1"
+php composer.phar require-dev --prefer-dist insolita/yii2-fixturegii "~1.0"
 ```
 
 or add
 
 ```
-"insolita/yii2-fixturegii": "~0.1"
+"insolita/yii2-fixturegii": "~1.0"
 ```
 
 to the require-dev section of your `composer.json` file.
@@ -35,13 +26,39 @@ to the require-dev section of your `composer.json` file.
 
 Usage
 -----
+Go to gii and use new Generators
 
-Add 
+Customize
+---------
+Set up in gii config sections
+```php
+  $config['modules']['gii'] = [
+          'class' => 'yii\gii\Module',
+          'generators' => [
+              //...
+              'fixtureClass'=>[
+                  'class'=>\insolita\fixturegii\generators\ClassGenerator::class,
+                  'templates'=>[
+                           //add your custom
+                  ]
+              ],
+              'fixtureData'=>[
+                  'class'=>\insolita\fixturegii\generators\DataGenerator::class,
+                  'tableResolverClass'=>'You can set own implementation',
+                  'templates'=>[
+                        //add your custom
+                  ]
+              ],
+              'fixtureTemplate'=>[
+              'class'=>\insolita\fixturegii\generators\TemplateGenerator::class,
+                'tableResolverClass'=>'You can set own implementation',
+                'columnResolverClass'=>'You can set own implementation',
+                'templates'=>[
+                        //add your custom
+                ]
+              ],
+          ]
+          //...
+      ];
 ```
-Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
-```
-to your config/web.php
-
-Go to gii, choose FixtureTemplateGenerator, set needed tables or "*" for all, go to setted templatePath,
-correct as you want and run php console/yii fixture/generate-all
 
