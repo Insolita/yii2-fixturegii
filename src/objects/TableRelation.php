@@ -58,7 +58,7 @@ class TableRelation extends Object
      */
     public function getName()
     {
-        return $this->tableName;
+        return $this->name;
     }
     /**
      * @return array

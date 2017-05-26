@@ -148,7 +148,7 @@ class TableResolverMysqlTest extends Unit
                 Debug::debug($founds);
                 \verify($founds)->hasKey('PRIMARY');
                 \verify($founds)->hasKey('complexIdx');
-                \verify($founds)->hasKey('migrik_test1_smallintField_key');
+                \verify($founds)->hasKey('smallintField');
     
             }
         );
