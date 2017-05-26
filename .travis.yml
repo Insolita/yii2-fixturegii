@@ -12,6 +12,11 @@ matrix:
 services:
   - postgresql: "9.5"
   - mysql
+addons:
+  postgresql: "9.5"
+  apt:
+    packages:
+      - postgresql-server-dev-9.5
 #  - redis-server
 
 # cache vendor dirs
