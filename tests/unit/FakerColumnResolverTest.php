@@ -25,7 +25,7 @@ class FakerColumnResolverTest extends Unit
              foreach ($colList as $name){
                  verify($name, $result)->hasKey($name);
              }
-             verify($result['boolField'])->contains('$faker->boolean');
+             verify($result['boolField'])->contains('$faker->optional()->boolean');
              verify($result['doubleField'])->contains('$faker->randomFloat');
              verify($result['decimalField'])->contains('$faker->randomFloat');
         });
@@ -34,7 +34,6 @@ class FakerColumnResolverTest extends Unit
             $columns = $db->getTableSchema('migrik_myspec')->columns;
             $resolver = new FakerColumnResolver($columns);
             $result = $resolver->buildFakerColumnsData();
-            verify(count($result))->equals(15);
             $colList = $db->getTableSchema('migrik_myspec')->getColumnNames();
             foreach ($colList as $name){
                 verify($name, $result)->hasKey($name);
@@ -53,16 +52,15 @@ class FakerColumnResolverTest extends Unit
             foreach ($colList as $name){
                 verify($name, $result)->hasKey($name);
             }
-            verify($result['boolField'])->contains('$faker->boolean');
+            verify($result['boolField'])->contains('$faker->optional()->boolean');
             verify($result['doubleField'])->contains('$faker->randomFloat');
             verify($result['decimalField'])->contains('$faker->randomFloat');
         });
         $this->specify('testPgSpec',function(){
-            $db = \Yii::$app->db;
+            $db = \Yii::$app->pgdb;
             $columns = $db->getTableSchema('migrik_pgspec')->columns;
             $resolver = new FakerColumnResolver($columns);
             $result = $resolver->buildFakerColumnsData();
-            verify(count($result))->equals(15);
             $colList = $db->getTableSchema('migrik_pgspec')->getColumnNames();
             foreach ($colList as $name){
                 verify($name, $result)->hasKey($name);
