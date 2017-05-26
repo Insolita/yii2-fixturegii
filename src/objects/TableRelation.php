@@ -5,6 +5,7 @@
 
 namespace insolita\fixturegii\objects;
 
+use yii\base\Object;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -12,7 +13,7 @@ use yii\helpers\ArrayHelper;
  *
  * @package insolita\fixturegii\objects
  */
-class TableRelation
+class TableRelation extends Object
 {
     /**
      * @var string
@@ -35,13 +36,14 @@ class TableRelation
      * @param string $tableName
      * @param array $constraints
      */
-    public function __construct($name, $tableName, $constraints)
+    public function __construct($name, $tableName, $constraints, $config = [])
     {
         $this->name = $name;
         $this->tableName = $tableName;
         foreach ($constraints as $fk => $related) {
             $this->constraints[] = ['fk' => $fk, 'related' => $related];
         }
+        parent::__construct($config);
     }
     
     /**

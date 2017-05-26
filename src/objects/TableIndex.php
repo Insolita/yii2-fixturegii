@@ -5,17 +5,14 @@
 
 namespace insolita\fixturegii\objects;
 
+use yii\base\Object;
+
 /**
  * Class TableIndex
  *
  * @package insolita\fixturegii\objects
  */
-/**
- * Class TableIndex
- *
- * @package insolita\fixturegii\objects
- */
-class TableIndex
+class TableIndex extends Object
 {
     /**
      * @var
@@ -39,11 +36,12 @@ class TableIndex
      * @param  array  $columns
      * @param bool    $unique
      */
-    public function __construct($name, $columns, $unique = false)
+    public function __construct($name, $columns, $unique = false, $config=[])
     {
         $this->name = $name;
         $this->columns = $columns;
         $this->unique = false;
+        parent::__construct($config);
     }
     
     /**
