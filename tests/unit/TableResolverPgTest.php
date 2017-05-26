@@ -40,7 +40,7 @@ class TableResolverPgTest extends Unit
         $resolver = new TableResolver($this->db);
         $caption = $resolver->getTableCaption('migrik_test1');
         \verify($caption)->equals('migrik_test1');
-        $this->db->tablePrefix = 'migrik';
+        $this->db->tablePrefix = 'migrik_';
         $resolver = new TableResolver($this->db);
         $caption = $resolver->getTableCaption('migrik_test1');
         \verify($caption)->equals('test1');
@@ -51,7 +51,7 @@ class TableResolverPgTest extends Unit
         $resolver = new TableResolver($this->db);
         $alias = $resolver->getTableAlias('migrik_test1');
         \verify($alias)->equals('{{%migrik_test1}}');
-        $this->db->tablePrefix = 'migrik';
+        $this->db->tablePrefix = 'migrik_';
         $resolver = new TableResolver($this->db);
         $alias = $resolver->getTableAlias('migrik_test1');
         \verify($alias)->equals('{{%test1}}');

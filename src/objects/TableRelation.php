@@ -80,7 +80,7 @@ class TableRelation extends Object
      */
     public function getRelatedIds()
     {
-        return ArrayHelper::getColumn($this->constraints, 'pk');
+        return ArrayHelper::getColumn($this->constraints, 'related');
     }
     /**
      * @return bool
