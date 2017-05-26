@@ -40,7 +40,7 @@ class TableIndex extends Object
     {
         $this->name = $name;
         $this->columns = $columns;
-        $this->unique = false;
+        $this->unique = $unique;
         parent::__construct($config);
     }
     
