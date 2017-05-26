@@ -26,7 +26,7 @@ class TableResolverMysqlTest extends Unit
     protected $db;
     protected function _before()
     {
-        $this->db =  \Yii::$app->dbmm;
+        $this->db =  \Yii::$app->db;
         Debug::debug($this->db->dsn);
     }
 
