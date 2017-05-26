@@ -1,13 +1,21 @@
 <?php
 /**
- * Created by solly [25.05.17 12:22]
+ * Created by solly [27.05.17 1:10]
  */
 
 namespace insolita\fixturegii\contracts;
 
+/**
+ * Class FakerColumnResolver
+ *
+ * @package insolita\fixturegii\services
+ */
 interface IFakerColumnResolver
 {
-    public function fakeByColumnType($type,$size);
-    
-    public function fakeByColumnName($name,$size);
+    /**
+     * @param \yii\db\ColumnSchema[] $columns
+     *
+     * @return array
+     */
+    public function buildFakerColumnsData();
 }
