@@ -17,7 +17,7 @@ $mysql = [
 ];
 return [
     'id' => 'app-test',
-    'basePath' => __DIR__ . '/tests/',
+    'basePath' => __DIR__ . '/../',
     'sourceLanguage' => 'en-US',
     'timeZone'            => 'Europe/Moscow',
     'language'       => 'ru',
