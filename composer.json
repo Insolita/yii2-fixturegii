@@ -1,25 +1,29 @@
 {
     "name": "insolita/yii2-fixturegii",
-    "description": "gii tool for generate fixture templates by table schema",
+    "description": "gii fixture helper - generate fixture classes; faker templates; fixture data files from table",
     "type": "yii2-extension",
     "keywords": ["yii2","extension"],
     "license": "MIT",
     "authors": [
         {
             "name": "insolita",
-            "email": "donnainsolita@gmail.com"
+            "email": "webmaster100500@ya.ru"
         }
     ],
     "require": {
         "yiisoft/yii2": "*",
+		"yiisoft/yii2-gii": "2.0.*",
 		"insolita/yii2-validatorpack":"~0.0.1"
     },
 	"require-dev":{
-		"yiisoft/yii2-faker": "*"
+		"vlucas/phpdotenv": "*",
+		"codeception/codeception": "^2.2.3",
+		"codeception/verify": "~0.3.1",
+		"codeception/specify": "~0.4.3"
 	},
     "autoload": {
         "psr-4": {
-            "insolita\\fixturegii\\": ""
+            "insolita\\fixturegii\\": "src/"
         }
     },
 	"extra": {
