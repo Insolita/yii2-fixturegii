@@ -111,7 +111,7 @@ class TableResolverMysqlTest extends Unit
                 \verify($relation->getTableName())->equals('migrik_test3');
                 \verify($relation->isComposite())->false();
                 \verify($relation->getFk())->equals(['extId']);
-                \verify($relation->getRelatedIds())->equals(['ids']);
+                \verify($relation->getRelatedIds())->equals(['id']);
                 \verify($relation->getName())->equals('someIdx');
                 Debug::debug($founds);
             }
@@ -125,7 +125,7 @@ class TableResolverMysqlTest extends Unit
             'not indexed',
             function () use ($resolver) {
                 $founds = $resolver->getIndexes('migrik_test3');
-                verify(count($founds))->equals(0);
+                verify(count($founds))->equals(1);
             }
         );
         
@@ -145,6 +145,7 @@ class TableResolverMysqlTest extends Unit
                 $founds = $resolver->getIndexes('migrik_test1');
                 verify(count($founds))->equals(3);
                 $founds = ArrayHelper::index($founds, 'name');
+                Debug::debug($founds);
                 \verify($founds)->hasKey('PRIMARY');
                 \verify($founds)->hasKey('complexIdx');
                 \verify($founds)->hasKey('migrik_test1_smallintField_key');

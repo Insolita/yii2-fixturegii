@@ -162,7 +162,7 @@ class TableResolverPgTest extends Unit
                 \verify($relation->getTableName())->equals('migrik_test3');
                 \verify($relation->isComposite())->false();
                 \verify($relation->getFk())->equals(['extId']);
-                \verify($relation->getRelatedIds())->equals(['ids']);
+                \verify($relation->getRelatedIds())->equals(['id']);
                 \verify($relation->getName())->equals('someIdx');
                 Debug::debug($founds);
             }
