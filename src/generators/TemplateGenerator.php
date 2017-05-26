@@ -5,6 +5,7 @@
 
 namespace insolita\fixturegii\generators;
 
+use insolita\fixturegii\contracts\IFakerColumnResolver;
 use insolita\fixturegii\services\FakerColumnResolver;
 use insolita\fixturegii\services\TableResolver;
 use insolita\validators\PathValidator;
@@ -38,9 +39,13 @@ class TemplateGenerator extends Generator
      */
     public $tableIgnore = '';
     
-    public $templates = [
-        'default'=>'@insolita/fixturegii/templates'
-    ];
+    /**
+     * @var array
+     */
+    public $templates
+        = [
+            'default' => '@insolita/fixturegii/templates',
+        ];
     
     /**
      * @var string
@@ -67,12 +72,31 @@ class TemplateGenerator extends Generator
     {
         return 'Generate fixture templates for FakerController';
     }
+    
+    /**
+     * @return string
+     */
     public function formView()
     {
         $class = new \ReflectionClass($this);
         
         return dirname($class->getFileName()) . '/../forms/template_form.php';
     }
+    
+    /**
+     * Returns the root path to the default code template files.
+     * The default implementation will return the "templates" subdirectory of the
+     * directory containing the generator class file.
+     *
+     * @return string the root path to the default code template files.
+     */
+    public function defaultTemplate()
+    {
+        $class = new \ReflectionClass($this);
+        
+        return dirname($class->getFileName()) . '/../templates';
+    }
+    
     /**
      * @return array
      */
@@ -175,7 +199,7 @@ class TemplateGenerator extends Generator
     }
     
     /**
-     * @return TableResolver
+     * @return \insolita\fixturegii\contracts\ITableResolver
      */
     protected function createTableResolver()
     {
@@ -192,7 +216,7 @@ class TemplateGenerator extends Generator
      * @param array|\insolita\fixturegii\objects\TableRelation[] $relations
      * @param array|\insolita\fixturegii\objects\TableIndex[]    $indexes
      *
-     * @return \insolita\fixturegii\services\FakerColumnResolver
+     * @return IFakerColumnResolver
      */
     protected function createColumnResolver($columns, $relations = [], $indexes = [])
     {

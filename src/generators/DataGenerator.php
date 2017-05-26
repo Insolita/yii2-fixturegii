@@ -9,46 +9,97 @@ use insolita\fixturegii\services\TableResolver;
 use insolita\validators\PathValidator;
 use yii\gii\CodeFile;
 use yii\gii\Generator;
-use yii\helpers\ArrayHelper;
 
+/**
+ * Class DataGenerator
+ *
+ * @package insolita\fixturegii\generators
+ */
 class DataGenerator extends Generator
 {
+    /**
+     * @var
+     */
     public $tableName;
     
+    /**
+     * @var
+     */
     public $tableIgnore;
     
-    public $db='db';
+    /**
+     * @var string
+     */
+    public $db = 'db';
     
+    /**
+     * @var
+     */
     public $fixturePath;
     
+    /**
+     * @var int
+     */
     public $dataLimit = 5;
     
+    /**
+     * @var int
+     */
     public $dataOffset = 0;
     
-    public $templates = [
-        'default'=>'@insolita/fixturegii/templates'
-    ];
+    /**
+     * @var array
+     */
+    public $templates
+        = [
+            'default' => '@insolita/fixturegii/templates',
+        ];
     
     /**
      * @var string
      */
     public $tableResolverClass = TableResolver::class;
     
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'Fixture Data From Db';
     }
     
+    /**
+     * @return string
+     */
     public function getDescription()
     {
         return 'Generate fixture data files from db';
     }
+    
+    /**
+     * @return string
+     */
     public function formView()
     {
         $class = new \ReflectionClass($this);
         
         return dirname($class->getFileName()) . '/../forms/data_form.php';
     }
+    
+    /**
+     * Returns the root path to the default code template files.
+     * The default implementation will return the "templates" subdirectory of the
+     * directory containing the generator class file.
+     *
+     * @return string the root path to the default code template files.
+     */
+    public function defaultTemplate()
+    {
+        $class = new \ReflectionClass($this);
+        
+        return dirname($class->getFileName()) . '/../templates';
+    }
+    
     /**
      * @inheritdoc
      */
@@ -64,10 +115,13 @@ class DataGenerator extends Generator
     {
         return array_merge(
             parent::stickyAttributes(),
-            ['db',  'tableIgnore', 'fixturePath', 'dataLimit']
+            ['db', 'tableIgnore', 'fixturePath', 'dataLimit']
         );
     }
     
+    /**
+     * @return array
+     */
     public function attributeLabels()
     {
         return array_merge(
@@ -83,6 +137,9 @@ class DataGenerator extends Generator
         );
     }
     
+    /**
+     * @return array
+     */
     public function attributeHints()
     {
         return array_merge(
@@ -95,6 +152,9 @@ class DataGenerator extends Generator
         );
     }
     
+    /**
+     * @return array
+     */
     public function rules()
     {
         return array_merge(
@@ -132,11 +192,11 @@ class DataGenerator extends Generator
             foreach ($tables as $tableName) {
                 $tableCaption = $resolver->getTableCaption($tableName);
                 $tableData = $resolver->getTableData($tableName, $this->dataLimit, $this->dataOffset);
-                if(empty($tableData)){
+                if (empty($tableData)) {
                     $data = [];
                     $columns = $resolver->getTableSchema($tableName)->columns;
-                    foreach ($columns as $column){
-                        $data[$column->name] = $column->allowNull?null:'';
+                    foreach ($columns as $column) {
+                        $data[$column->name] = $column->allowNull ? null : '';
                     }
                     $tableData = [$data];
                 }
@@ -151,7 +211,7 @@ class DataGenerator extends Generator
     }
     
     /**
-     * @return TableResolver
+     * @return \insolita\fixturegii\contracts\ITableResolver
      */
     protected function createTableResolver()
     {

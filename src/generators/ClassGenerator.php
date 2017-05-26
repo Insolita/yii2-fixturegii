@@ -41,10 +41,15 @@ class ClassGenerator extends Generator
      * @var string
      */
     public $fixturePath = '@tests/fixtures/data/user.php';
- 
-    public $templates = [
-        'default'=>'@insolita/fixturegii/templates'
-    ];
+    
+    /**
+     * @var array
+     */
+    public $templates
+        = [
+            'default' => '@insolita/fixturegii/templates',
+        ];
+    
     /**
      * @return string
      */
@@ -53,11 +58,28 @@ class ClassGenerator extends Generator
         return 'Active Fixture Class generator';
     }
     
+    /**
+     * @return string
+     */
     public function formView()
     {
         $class = new \ReflectionClass($this);
-    
+        
         return dirname($class->getFileName()) . '/../forms/class_form.php';
+    }
+    
+    /**
+     * Returns the root path to the default code template files.
+     * The default implementation will return the "templates" subdirectory of the
+     * directory containing the generator class file.
+     *
+     * @return string the root path to the default code template files.
+     */
+    public function defaultTemplate()
+    {
+        $class = new \ReflectionClass($this);
+        
+        return dirname($class->getFileName()) . '/../templates';
     }
     
     /**
@@ -74,17 +96,19 @@ class ClassGenerator extends Generator
                 ],
                 [['parentClass', 'modelClass'], 'validateClass'],
                 [['classNs'], 'validateNewClass'],
-                [['classPath'], PathValidator::class,'strictDir'=>true,'writeable'=>true],
-                [['fixturePath'],
-                 PathValidator::class,
-                 'strictFile'=>true,
-                 'aliasReplace'=>false,
-                 'normalize'=>false,
-                 'readable'=>true],
+                [['classPath'], PathValidator::class, 'strictDir' => true, 'writeable' => true],
+                [
+                    ['fixturePath'],
+                    PathValidator::class,
+                    'strictFile'   => true,
+                    'aliasReplace' => false,
+                    'normalize'    => false,
+                    'readable'     => true,
+                ],
             ]
         );
     }
-
+    
     /**
      * @return array
      */
@@ -132,7 +156,7 @@ class ClassGenerator extends Generator
     {
         return ['fixture_class.php'];
     }
- 
+    
     /**
      * @return array
      */
@@ -140,7 +164,7 @@ class ClassGenerator extends Generator
     {
         $files = [];
         $files[] = new CodeFile(
-           $this->classPath . '/' . StringHelper::basename($this->classNs) . '.php',
+            $this->classPath . '/' . StringHelper::basename($this->classNs) . '.php',
             $this->render('fixture_class.php', [])
         );
         return $files;
