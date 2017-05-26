@@ -19,7 +19,8 @@
 		"vlucas/phpdotenv": "*",
 		"codeception/codeception": "^2.2.3",
 		"codeception/verify": "~0.3.1",
-		"codeception/specify": "~0.4.3"
+		"codeception/specify": "~0.4.3",
+		"nesbot/carbon": "~1.9"
 	},
 	"suggest": {
 		"insolita/yii2-skeletest": "1.*"

@@ -4,6 +4,7 @@ Yii2-fixture/template-generator
 ![Latest Stable Version](https://img.shields.io/packagist/v/insolita/yii2-fixturegii.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/insolita/yii2-fixturegii.svg)](https://packagist.org/packages/insolita/yii2-fixturegii.svg)
 ![License](https://img.shields.io/packagist/l/insolita/yii2-fixturegii.svg)
+
 gii fixture helper - generate fixture classes; faker templates; fixture data files from table
 support bulk template and data-file generations
 
@@ -27,7 +28,7 @@ to the require-dev section of your `composer.json` file.
 Usage
 -----
 Go to gii and use new Generators
-
+**Suggest:** define '@test' or '@fixture' alias for quick path setup
 Customize
 ---------
 Set up in gii config sections
