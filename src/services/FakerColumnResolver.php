@@ -78,9 +78,11 @@ class FakerColumnResolver implements IFakerColumnResolver
         if ($column->autoIncrement === true || in_array($column->name, $this->foreignKeys)) {
             $result = $this->fakeByType('increment');
         } elseif (StringHelper::startsWith($column->dbType, 'enum(')) {
-            $result = $this->fakeByType('enum', $column->enumValues);
+            $vals = !empty($column->enumValues)?implode(',', $column->enumValues):'';
+            $result = $this->fakeByType('enum', $vals);
         } elseif (StringHelper::startsWith($column->dbType, 'set(')) {
-            $result = $this->fakeByType('set', $column->enumValues);
+            $vals = !empty($column->enumValues)?implode(',', $column->enumValues):'';
+            $result = $this->fakeByType('set', $vals);
         } elseif (StringHelper::startsWith($column->dbType, '_')) {
             $result = $this->fakeByType('array', $column->dbType);
         } elseif ($column->phpType === 'boolean') {
@@ -126,7 +128,7 @@ class FakerColumnResolver implements IFakerColumnResolver
                 return '$faker->date()';
             case 'set':
             case 'enum':
-                return '$faker->randomElement([' . implode(',', $data) . '])';
+                return '$faker->randomElement([' . $data . '])';
             case 'decimal':
             case 'float':
             case 'double':
