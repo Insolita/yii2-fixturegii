@@ -5,6 +5,7 @@
 
 namespace insolita\fixturegii\services;
 
+use insolita\fixturegii\contracts\ITableResolver;
 use insolita\fixturegii\objects\TableIndex;
 use insolita\fixturegii\objects\TableRelation;
 use yii\db\Connection;
@@ -18,7 +19,7 @@ use yii\helpers\StringHelper;
  *
  * @package insolita\fixturegii\services
  */
-class TableResolver
+class TableResolver implements ITableResolver
 {
     /**
      * @var \yii\db\Schema

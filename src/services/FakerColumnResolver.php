@@ -5,6 +5,7 @@
 
 namespace insolita\fixturegii\services;
 
+use insolita\fixturegii\contracts\IFakerColumnResolver;
 use yii\db\ColumnSchema;
 use yii\helpers\StringHelper;
 
@@ -13,7 +14,7 @@ use yii\helpers\StringHelper;
  *
  * @package insolita\fixturegii\services
  */
-class FakerColumnResolver
+class FakerColumnResolver implements IFakerColumnResolver
 {
     
     /**
