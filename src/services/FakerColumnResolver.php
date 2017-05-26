@@ -85,7 +85,7 @@ class FakerColumnResolver implements IFakerColumnResolver
             $result = $this->fakeByType('set', $vals);
         } elseif (StringHelper::startsWith($column->dbType, '_')) {
             $result = $this->fakeByType('array', $column->dbType);
-        } elseif ($column->phpType === 'boolean') {
+        } elseif ($column->phpType === 'boolean' || ($column->dbType=='smallint' && $column->size==1)) {
             $result = $this->fakeByType('boolean');
         } elseif (in_array($column->dbType, ['timestamp', 'date', 'time', 'datetime'])) {
             $result = $this->fakeByType($column->dbType);

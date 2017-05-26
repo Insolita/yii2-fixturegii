@@ -26,8 +26,8 @@ class FakerColumnResolverTest extends Unit
                  verify($name, $result)->hasKey($name);
              }
              verify($result['boolField'])->contains('$faker->optional()->boolean');
-             verify($result['doubleField'])->contains('$faker->randomFloat');
-             verify($result['decimalField'])->contains('$faker->randomFloat');
+             verify($result['doubleField'])->contains('randomFloat');
+             verify($result['decimalField'])->contains('randomFloat');
         });
         $this->specify('testMysqlSpec',function(){
             $db = \Yii::$app->db;
@@ -38,9 +38,9 @@ class FakerColumnResolverTest extends Unit
             foreach ($colList as $name){
                 verify($name, $result)->hasKey($name);
             }
-            verify($result['enum'])->contains('$faker->randomElement');
-            verify($result['set'])->contains('$faker->randomElement');
-            verify($result['timeStampField'])->contains('$faker->dateTimeThisMonth');
+            verify($result['enum'])->contains('randomElement');
+            verify($result['set'])->contains('randomElement');
+            verify($result['timeStampField'])->contains('dateTimeThisMonth');
         });
         $this->specify('testPgSql',function(){
             $db = \Yii::$app->pgdb;
@@ -53,8 +53,9 @@ class FakerColumnResolverTest extends Unit
                 verify($name, $result)->hasKey($name);
             }
             verify($result['boolField'])->contains('$faker->optional()->boolean');
-            verify($result['doubleField'])->contains('$faker->randomFloat');
-            verify($result['decimalField'])->contains('$faker->randomFloat');
+            verify($result['doubleField'])->contains('randomFloat');
+            verify($result['decimalField'])->contains('randomFloat');
+            verify($result['floatField'])->contains('randomFloat');
         });
         $this->specify('testPgSpec',function(){
             $db = \Yii::$app->pgdb;
@@ -65,8 +66,8 @@ class FakerColumnResolverTest extends Unit
             foreach ($colList as $name){
                 verify($name, $result)->hasKey($name);
             }
-            verify($result['arrField'])->contains('$faker->randomElement');
-            verify($result['arrField2'])->contains('$faker->randomElement');
+            verify($result['arrField'])->contains('int[]');
+            verify($result['arrField2'])->contains('text[]');
             verify($result['jsonField'])->contains('{}');
             verify($result['binaryField'])->contains('null');
         });
