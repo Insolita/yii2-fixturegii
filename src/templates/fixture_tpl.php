@@ -4,7 +4,7 @@
  */
 /**
  *  @var array $tableColumns
- *  @var insolita\fixturegii\gii\FixtureTemplateGenerator $generator
+ *  @var \insolita\fixturegii\generators\TemplateGenerator $generator
  */
 
 echo "<?php\n";
@@ -14,7 +14,7 @@ echo "<?php\n";
 * @var $index integer
 */
 return [
-<?php foreach($tableColumns as $name=>$fakeval):?>
-    '<?=$name?>'=> <?=$fakeval;?>,
+<?php foreach($tableColumns as $name=>$fakeString):?>
+    '<?=$name?>'=> <?=$fakeString;?>,
 <?php endforeach;?>
 ];
