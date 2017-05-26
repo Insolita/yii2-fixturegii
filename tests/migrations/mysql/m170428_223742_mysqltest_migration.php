@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m170428_223742_test_migration extends Migration
+class m170428_223742_mysqltest_migration extends Migration
 {
     public $db = 'db';
     

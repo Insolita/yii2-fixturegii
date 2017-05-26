@@ -5,7 +5,7 @@ $pgsql = [
     'username' => getenv('PG_USER'),
     'password' => getenv('PG_PASSWORD'),
     'charset' => 'utf8',
-    'tablePrefix' => 'test_'
+    //'tablePrefix' => 'test_'
 ];
 $mysql = [
     'class'=>\yii\db\Connection::class,
@@ -13,7 +13,7 @@ $mysql = [
     'username' => getenv('MYSQL_USER'),
     'password' => getenv('MYSQL_PASSWORD'),
     'charset' => 'utf8',
-    'tablePrefix' => 'test_'
+    //'tablePrefix' => 'test_'
 ];
 return [
     'id' => 'app-test',
