@@ -47,7 +47,7 @@ class FakerColumnResolver implements IFakerColumnResolver
         if (!empty($indexes)) {
             foreach ($indexes as $index) {
                 if ($index->isUnique() && !$index->isMultiColumn()) {
-                    $this->uniques[] = reset($index->getColumns());
+                    $this->uniques[] = $index->getColumnField();
                 }
             }
         }
@@ -89,9 +89,11 @@ class FakerColumnResolver implements IFakerColumnResolver
             $result = $this->fakeByType('boolean');
         } elseif (in_array($column->dbType, ['timestamp', 'date', 'time', 'datetime'])) {
             $result = $this->fakeByType($column->dbType);
-        } elseif (in_array($column->dbType, ['float', 'decimal', 'double', 'numeric'])) {
+        } elseif (in_array($column->dbType, ['float','float8', 'decimal', 'double', 'numeric'])) {
             $result = $this->fakeByType($column->dbType, $column->precision);
-        } elseif ($column->phpType === 'string') {
+        } elseif ($column->dbType === 'json') {
+            $result = $this->fakeByType('json');
+        }elseif ($column->phpType === 'string') {
             $result = $this->guessStrings($column);
         } elseif ($column->phpType === 'integer') {
             $result = $this->guessIntegers($column);
@@ -131,6 +133,7 @@ class FakerColumnResolver implements IFakerColumnResolver
                 return '$faker->randomElement([' . $data . '])';
             case 'decimal':
             case 'float':
+            case 'float8':
             case 'double':
             case 'numeric':
                 return '$faker->randomFloat(' . $data . ')';
@@ -139,7 +142,7 @@ class FakerColumnResolver implements IFakerColumnResolver
                 return "'" . $type . "[]'";
             }
             case 'json': {
-                return '{}';
+                return 'json_encode([])';
             }
             case 'nullable':
                 return 'null';

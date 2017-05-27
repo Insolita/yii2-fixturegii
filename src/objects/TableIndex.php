@@ -36,7 +36,7 @@ class TableIndex extends Object
      * @param  array  $columns
      * @param bool    $unique
      */
-    public function __construct($name, $columns, $unique = false, $config=[])
+    public function __construct($name, $columns, $unique = false, $config = [])
     {
         $this->name = $name;
         $this->columns = $columns;
@@ -61,6 +61,14 @@ class TableIndex extends Object
     }
     
     /**
+     * @return string
+     */
+    public function getColumnField()
+    {
+        return reset($this->columns);
+    }
+    
+    /**
      * @return bool
      */
     public function isUnique()
@@ -73,7 +81,7 @@ class TableIndex extends Object
      */
     public function isMultiColumn()
     {
-        return (count($this->columns) > 1);
+        return count($this->columns) > 1;
     }
     
 }
