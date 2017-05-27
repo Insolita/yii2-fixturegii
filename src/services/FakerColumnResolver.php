@@ -89,8 +89,12 @@ class FakerColumnResolver implements IFakerColumnResolver
             $result = $this->fakeByType('boolean');
         } elseif (in_array($column->dbType, ['timestamp', 'date', 'time', 'datetime'])) {
             $result = $this->fakeByType($column->dbType);
-        } elseif (in_array($column->dbType, ['float','float8', 'decimal', 'double', 'numeric'])) {
-            $result = $this->fakeByType($column->dbType, $column->precision);
+        } elseif (
+            in_array($column->dbType, ['float','float8', 'decimal', 'double', 'numeric'])
+            || $column->type == 'decimal'
+        
+        ) {
+            $result = $this->fakeByType('numeric', $column->precision);
         } elseif ($column->dbType === 'json') {
             $result = $this->fakeByType('json');
         }elseif ($column->phpType === 'string') {
