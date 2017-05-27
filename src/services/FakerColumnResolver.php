@@ -78,14 +78,14 @@ class FakerColumnResolver implements IFakerColumnResolver
         if ($column->autoIncrement === true || in_array($column->name, $this->foreignKeys)) {
             $result = $this->fakeByType('increment');
         } elseif (StringHelper::startsWith($column->dbType, 'enum(')) {
-            $vals = !empty($column->enumValues)?implode(',', $column->enumValues):'';
+            $vals = !empty($column->enumValues)?'"'.implode('","', $column->enumValues).'"':'';
             $result = $this->fakeByType('enum', $vals);
         } elseif (StringHelper::startsWith($column->dbType, 'set(')) {
             $vals = !empty($column->enumValues)?implode(',', $column->enumValues):'';
             $result = $this->fakeByType('set', $vals);
         } elseif (StringHelper::startsWith($column->dbType, '_')) {
             $result = $this->fakeByType('array', $column->dbType);
-        } elseif ($column->phpType === 'boolean' || ($column->dbType=='smallint' && $column->size==1)) {
+        } elseif ($column->phpType === 'boolean' || ($column->type=='smallint' && $column->size==1)) {
             $result = $this->fakeByType('boolean');
         } elseif (in_array($column->dbType, ['timestamp', 'date', 'time', 'datetime'])) {
             $result = $this->fakeByType($column->dbType);
