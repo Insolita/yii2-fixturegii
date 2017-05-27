@@ -4,6 +4,7 @@
     "type": "yii2-extension",
     "keywords": ["yii2","extension"],
     "license": "MIT",
+	"version": "1.0",
     "authors": [
         {
             "name": "insolita",

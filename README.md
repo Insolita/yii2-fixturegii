@@ -1,11 +1,12 @@
 Yii2-fixture/template-generator
 ===============================
+
 ![Status](https://travis-ci.org/Insolita/yii2-fixturegii.svg?branch=master)
 ![Latest Stable Version](https://img.shields.io/packagist/v/insolita/yii2-fixturegii.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/insolita/yii2-fixturegii.svg)](https://packagist.org/packages/insolita/yii2-fixturegii.svg)
 ![License](https://img.shields.io/packagist/l/insolita/yii2-fixturegii.svg)
 
-gii fixture helper - generate fixture classes; faker templates; fixture data files from table
+Gii fixture helper - generate fixture classes; faker templates; fixture data files from table
 support bulk template and data-file generations
 
 Installation
