@@ -29,7 +29,10 @@ to the require-dev section of your `composer.json` file.
 Usage
 -----
 Go to gii and use new Generators
-**Suggest:** define '@test' or '@fixture' alias for quick path setup
+
+**Suggest:**
+ define '@test' or '@fixture' alias for quick path setup
+
 Customize
 ---------
 Set up in gii config sections
