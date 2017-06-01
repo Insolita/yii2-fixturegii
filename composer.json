@@ -30,8 +30,5 @@
         "psr-4": {
             "insolita\\fixturegii\\": "src/"
         }
-    },
-	"extra": {
-	   "bootstrap": "insolita\\fixturegii\\Bootstrap"
-	}
+    }
 }

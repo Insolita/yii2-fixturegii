@@ -28,13 +28,18 @@ to the require-dev section of your `composer.json` file.
 
 Usage
 -----
+Register insolita\fixturegii\Bootstrap in bootstrap section of backend application, or add needed generators in section of gii module
+
 Go to gii and use new Generators
 
 **Suggest:**
+
  define '@test' or '@fixture' alias for quick path setup
+
 
 Customize
 ---------
+
 Set up in gii config sections
 ```php
   $config['modules']['gii'] = [
