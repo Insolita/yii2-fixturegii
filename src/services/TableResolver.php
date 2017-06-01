@@ -120,8 +120,16 @@ class TableResolver implements ITableResolver
      */
     public function getTableData($tableName, $limit, $offset)
     {
-        return (new Query())->select('*')
+        $data =  (new Query())->select('*')
                             ->from($tableName)->limit($limit)->offset($offset)->all($this->connection);
+        if($this->connection->driverName==='pgsql'){
+            foreach ($data as $column=>&$value){
+                if(is_resource($value)){
+                    $value =stream_get_contents($value);
+                }
+            }
+        }
+        return $data;
     }
     
     /**
