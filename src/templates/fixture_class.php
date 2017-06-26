@@ -10,6 +10,7 @@ echo "<?php\n";
 use <?=ltrim($generator->parentClass,'\\')?>;
 
 class <?=StringHelper::basename($generator->classNs)?> extends <?=StringHelper::basename($generator->parentClass)?>
+
 {
       public $modelClass = '<?=$generator->modelClass?>';
       public $dataFile = '<?=$generator->fixturePath?>';

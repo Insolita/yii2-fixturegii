@@ -15,6 +15,6 @@ echo "<?php\n";
 */
 return [
 <?php foreach($tableColumns as $name=>$fakeString):?>
-    '<?=$name?>'=> <?=$fakeString;?>,
+    '<?=$name?>' => <?=$fakeString;?>,
 <?php endforeach;?>
 ];
