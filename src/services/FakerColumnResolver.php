@@ -127,7 +127,7 @@ class FakerColumnResolver implements IFakerColumnResolver
                 return '$faker->boolean(50)';
             case 'timestamp':
             case 'datetime':
-                return '$faker->dateTimeThisMonth';
+                return '$faker->dateTimeThisMonth->format("Y-m-d H:i:s")';
             case 'time':
                 return '$faker->time()';
             case 'date':
@@ -204,7 +204,7 @@ class FakerColumnResolver implements IFakerColumnResolver
         } elseif ($this->isLastnameColumn($colName)) {
             return '$faker->lastName';
         } elseif ($this->isTitleColumn($colName)) {
-            return '$faker->unique()->title';
+            return '$faker->unique()->sentence';
         } elseif ($this->isEmailColumn($colName)) {
             return '$faker->unique()->email';
         } elseif ($this->isSlugColumn($colName)) {
