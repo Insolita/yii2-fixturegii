@@ -14,7 +14,7 @@ Installation
 
 
 ```
-php composer.phar require --dev --prefer-dist insolita/yii2-fixturegii "~1.0.0"
+composer require --dev --prefer-dist insolita/yii2-fixturegii "~1.0.0"
 ```
 
 or add
