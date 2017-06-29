@@ -11,10 +11,10 @@ echo "<?php\n";
 ?>
 return [
 <?php foreach($data as $index=>$row):?>
-    '<?=$tableCaption.($index+1)?>'=>[
+    '<?=$tableCaption.($index+1)?>' => [
     <?php foreach($row as $name=>$val):?>
-    '<?=$name?>'=> '<?= addslashes($val);?>',
+    '<?=$name?>' => '<?= addslashes($val);?>',
     <?php endforeach;?>
-    ],
+],
 <?php endforeach;?>
 ];
