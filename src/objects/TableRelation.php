@@ -5,7 +5,7 @@
 
 namespace insolita\fixturegii\objects;
 
-use yii\base\Object;
+use yii\base\BaseObject;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -13,7 +13,7 @@ use yii\helpers\ArrayHelper;
  *
  * @package insolita\fixturegii\objects
  */
-class TableRelation extends Object
+class TableRelation extends BaseObject
 {
     /**
      * @var string

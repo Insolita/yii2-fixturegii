@@ -5,14 +5,14 @@
 
 namespace insolita\fixturegii\objects;
 
-use yii\base\Object;
+use yii\base\BaseObject;
 
 /**
  * Class TableIndex
  *
  * @package insolita\fixturegii\objects
  */
-class TableIndex extends Object
+class TableIndex extends BaseObject
 {
     /**
      * @var
