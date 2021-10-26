@@ -14,13 +14,13 @@ Installation
 
 
 ```
-composer require --dev --prefer-dist insolita/yii2-fixturegii "~2.0.0"
+composer require --dev --prefer-dist insolita/yii2-fixturegii "~3.0.0"
 ```
 
 or add
 
 ```
-"insolita/yii2-fixturegii": "~2.0.0"
+"insolita/yii2-fixturegii": "~3.0.0"
 ```
 
 to the require-dev section of your `composer.json` file.
