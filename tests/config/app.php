@@ -19,8 +19,8 @@ return [
     'id' => 'app-test',
     'sourceLanguage' => 'en-US',
     'timeZone' => 'UTC',
-    'basePath' => dirname(__DIR__) . '/tmp/docker_app',
-    'runtimePath' => dirname(__DIR__) . '/tmp',
+    'basePath' => dirname(__DIR__). '/tmp',
+    'runtimePath' => dirname(__DIR__) . '/tmp/runtime',
     'vendorPath' => dirname(__DIR__, 2) . '/vendor',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',

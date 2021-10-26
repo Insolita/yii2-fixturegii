@@ -16,23 +16,21 @@ install:
 test:
 	php $(PHPARGS) vendor/bin/codecept run
 
-clean_all:
-	docker-compose down
-	sudo rm -rf tests/tmp/*
+down:
+	docker-compose down --remove-orphans
+	sudo rm -rf tests/tmp
 
 up:
 	docker-compose up -d
-	chmod +rw -R tests/tmp
-	mkdir -p tests/testapp/runtime && chmod +rw -R tests/testapp/runtime
 
 cli:
 	docker-compose exec php bash
 
 installdocker:
-	docker-compose run --rm php composer install && chmod +x tests/testapp/yii
+	docker-compose run --rm php composer install && chmod +x tests/yii && tests/yii migrate && tests/yii pgmigrate
 
 testdocker:
-	docker-compose run --rm php sh -c 'vendor/bin/codecept run --env docker'
+	docker-compose run --rm php sh -c 'vendor/bin/codecept run'
 
-.PHONY: all check-style fix-style install test clean clean_all up cli installdocker migrate testdocker
+.PHONY: all check-style fix-style install test down up cli installdocker testdocker
 

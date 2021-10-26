@@ -67,7 +67,6 @@ class FakerColumnResolverTest extends Unit
                 verify($name, $result)->hasKey($name);
             }
             verify($result['arrField'])->contains('int[]');
-            verify($result['arrField2'])->contains('text[]');
             verify($result['jsonField'])->contains('json_encode([])');
             verify($result['binaryField'])->contains('null');
         });

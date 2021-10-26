@@ -1,9 +1,7 @@
 version: "3.5"
 services:
     php:
-        build:
-            dockerfile: tests/docker/Dockerfile
-            context: .
+        image: yiisoftware/yii2-php:7.4-apache
         volumes:
             - ./tests/tmp/.composer:/root/.composer:rw
             - .:/app
@@ -21,7 +19,7 @@ services:
             - postgres
         tty: true
     mysql:
-        image: mysql:5.7
+        image: mariadb
         ports:
             - '13306:3306'
         tmpfs:
@@ -32,6 +30,7 @@ services:
             MYSQL_USER: dbuser
             MYSQL_PASSWORD: dbpass
             MYSQL_DATABASE: testdb
+            MYSQL_INITDB_SKIP_TZINFO: 1
     postgres:
         image: postgres:12
         ports:

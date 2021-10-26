@@ -3,4 +3,5 @@
 /composer.lock
 /phpunit.xml
 /.php_cs.cache
-
+/tests/tmp
+/tests/output
