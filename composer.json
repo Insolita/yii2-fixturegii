@@ -29,9 +29,6 @@
 		"codeception/specify": "~0.4.3",
 		"nesbot/carbon": "~1.9"
 	},
-	"suggest": {
-		"insolita/yii2-skeletest": "1.*"
-	},
     "autoload": {
         "psr-4": {
             "insolita\\fixturegii\\": "src/"

@@ -1,1 +1,6 @@
-runtime/*
+/runtime
+/vendor
+/composer.lock
+/phpunit.xml
+/.php_cs.cache
+

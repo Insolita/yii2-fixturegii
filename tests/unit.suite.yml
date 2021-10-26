@@ -3,4 +3,4 @@ modules:
    enabled:
       - Yii2:
             part: [orm,fixtures,email]
-            configFile: 'tests/config/base.php'
+            configFile: 'tests/config/app.php'

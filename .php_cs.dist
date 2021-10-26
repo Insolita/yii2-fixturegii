@@ -1,0 +1,17 @@
+<?php
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@PSR2' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'general_phpdoc_annotation_remove' => ['annotations' => ['author']],
+        'header_comment' => [
+            'comment_type' => 'PHPDoc',
+            'header' => <<<COMMENT
+@copyright Copyright (c) 2021 Insolita <webmaster100500@ya.ru> and contributors
+@license MIT
+COMMENT
+        ]
+    ])
+;
+
