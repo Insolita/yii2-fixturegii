@@ -8,6 +8,7 @@ namespace insolita\fixturegii\services;
 use insolita\fixturegii\contracts\IFakerColumnResolver;
 use yii\db\ColumnSchema;
 use yii\helpers\StringHelper;
+use yii\helpers\VarDumper;
 
 /**
  * Class FakerColumnResolver
@@ -83,16 +84,18 @@ class FakerColumnResolver implements IFakerColumnResolver
         } elseif (StringHelper::startsWith($column->dbType, 'set(')) {
             $vals = !empty($column->enumValues)?implode(',', $column->enumValues):'';
             $result = $this->fakeByType('set', $vals);
-        } elseif (StringHelper::startsWith($column->dbType, '_')) {
+        } elseif (StringHelper::startsWith($column->dbType, '_') || $column->dbType === 'int4') {
             $result = $this->fakeByType('array', $column->dbType);
-        } elseif ($column->phpType === 'boolean' || ($column->type=='smallint' && $column->size==1)) {
+        } elseif (
+            $column->phpType === 'boolean'
+            || ($column->type=='smallint' && $column->size==1)
+            || ($column->type=='tinyint' && $column->size==1)) {
             $result = $this->fakeByType('boolean');
         } elseif (in_array($column->dbType, ['timestamp', 'date', 'time', 'datetime'])) {
             $result = $this->fakeByType($column->dbType);
         } elseif (
             in_array($column->dbType, ['float','float8', 'decimal', 'double', 'numeric'])
             || $column->type == 'decimal'
-        
         ) {
             $result = $this->fakeByType('numeric', $column->precision);
         } elseif ($column->dbType === 'json') {
